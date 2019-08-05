@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
 
-import MovieItem from './movie-item';
 import ListGroup from './list-group';
+import MoviesTable from './movies-table';
 import Pagination from './pagination';
 import { paginate } from '../utils/paginate';
 
@@ -29,7 +29,7 @@ export default class MoviesList extends Component {
     })
   }
 
-  removeMovie = (id) => {
+  onDeleteMovie = (id) => {
     const { movies } = this.state;
     const newMoviesList = movies.filter(({ _id }) => _id !== id);
 
@@ -92,35 +92,11 @@ export default class MoviesList extends Component {
 
         <div className="col">
           <h2>Movies count: {filteredMovies.length}</h2>
-          <table className='table'>
-            <thead className='thead-dark'>
-              <tr>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Stock</th>
-                <th>Rate</th>
-                <th>Favorite</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                currentMovies.map((movie) => {
-                  const isLiked = likes
-                    .find((likedMovie) => likedMovie._id === movie._id);
-
-                  return (
-                    <tr key={movie._id}>
-                      <MovieItem movie={movie} 
-                                 isLiked={isLiked} 
-                                 removeMovie={this.removeMovie}
-                                 onLike={this.onLike} />
-                    </tr>
-                  )
-                }) 
-              }
-            </tbody>
-          </table>
+          
+          <MoviesTable movies={currentMovies}
+                       likes={likes}
+                       onLike={this.onLike}
+                       onDeleteMovie={this.onDeleteMovie} />
 
           <Pagination itemTotal={filteredMovies.length} 
                       pageSize={pageSize}
