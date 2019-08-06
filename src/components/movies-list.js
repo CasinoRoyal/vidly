@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
@@ -14,9 +15,9 @@ export default class MoviesList extends Component {
     movies: [],
     genres: [],
     selectedGenre: null,
-    likes: [],
     pageSize: 4,
-    currentPage: 1
+    currentPage: 1,
+    sortColumn: {path: 'title', order: 'asc'}
   }
 
   componentDidMount() {
@@ -39,22 +40,11 @@ export default class MoviesList extends Component {
   }
 
   onLike = (movie) => {
-    const { likes } = this.state;
-
-    const isNew = likes.find((likedMovie) => {
-     return likedMovie._id === movie._id})
-
-    if (isNew) {
-      const newLikes = likes.filter((likedMovie) => likedMovie._id !== isNew._id);
-
-      return this.setState({
-        likes: [...newLikes]
-      })      
-    }
-
-    return this.setState({
-      likes: [...this.state.likes, movie]
-    })
+    const movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    movies[index] = { ...movies[index] };
+    movies[index].liked = !movies[index].liked;
+    this.setState({ movies });     
   }
 
   onPageChange = (page) => {
@@ -70,16 +60,23 @@ export default class MoviesList extends Component {
     })
   }
 
-  render() {
-    const { movies, genres, 
-            likes, pageSize, 
-            currentPage, selectedGenre } = this.state;
+  onSort = (sortColumn) => {
+    this.setState({sortColumn})       
+  }
 
+  render() {
+    const { movies, genres,  pageSize, 
+            currentPage, selectedGenre, 
+            sortColumn } = this.state;
+            
     const filteredMovies = selectedGenre && selectedGenre._id
       ? movies.filter(({ genre }) => genre._id === selectedGenre._id)
       : movies;
-            
-    const currentMovies = paginate(filteredMovies, currentPage, pageSize);
+
+    const sortedMovies = 
+      _.orderBy(filteredMovies, [sortColumn.path], [sortColumn.order]);
+
+    const currentMovies = paginate(sortedMovies, currentPage, pageSize);
 
     return(
       <div className='row'>
@@ -94,9 +91,10 @@ export default class MoviesList extends Component {
           <h2>Movies count: {filteredMovies.length}</h2>
           
           <MoviesTable movies={currentMovies}
-                       likes={likes}
                        onLike={this.onLike}
-                       onDeleteMovie={this.onDeleteMovie} />
+                       onDeleteMovie={this.onDeleteMovie}
+                       onSort={this.onSort} 
+                       sortColumn={sortColumn}/>
 
           <Pagination itemTotal={filteredMovies.length} 
                       pageSize={pageSize}

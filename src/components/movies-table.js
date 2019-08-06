@@ -1,42 +1,39 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-import MovieItem from './movie-item';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-const MovieTable = (props) => {
-  const { movies, likes, 
-          onLike, onDeleteMovie } = props;
+import Table from './table';
 
-  return(
-    <table className='table'>
-      <thead className='thead-dark'>
-        <tr>
-          <th>Title</th>
-          <th>Genre</th>
-          <th>Stock</th>
-          <th>Rate</th>
-          <th>Favorite</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          movies.map((movie) => {
-            const isLiked = likes
-              .find((likedMovie) => likedMovie._id === movie._id);
 
-            return (
-              <tr key={movie._id}>
-                <MovieItem movie={movie} 
-                           isLiked={isLiked} 
-                           removeMovie={onDeleteMovie}
-                           onLike={onLike} />
-              </tr>
-            )
-          }) 
-        }
-      </tbody>
-    </table>
-  )
+class MovieTable extends Component {
+
+  columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    { key: "Favorite", 
+      render: (movie) => 
+        <FontAwesomeIcon icon={faHeart} 
+                         color={movie.liked ? 'green' : ''} 
+                         size='lg' 
+                         onClick={() => this.props.onLike(movie)}/> },
+    { key: "Delete",
+      render: (movie) => 
+        <button onClick={() => this.props.onDeleteMovie(movie._id)}>X</button> }
+  ]
+
+  render() {
+    const { movies, onSort, sortColumn} = this.props;
+
+    return(
+      <Table data={movies}
+             columns={this.columns}
+             sortColumn={sortColumn}
+             onSort={onSort} />
+    )
+  }
 }
 
 export default MovieTable;
