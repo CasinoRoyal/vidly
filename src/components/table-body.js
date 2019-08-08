@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
-export default class TableBody extends Component {
+class TableBody extends Component {
 
   renderCell = (item, column) => {
-    if (column.render) return column.render(item)
+    if (column.render) return column.render(item);
 
-    return _.get(item, column.path)
+    if (column.path === 'title') {
+      return( 
+        <Link to={`/movies/${item._id}`}>
+          {_.get(item, column.path)}
+        </Link>
+      )
+    };
+
+    return _.get(item, column.path);
   }
 
   render() {
@@ -35,3 +44,5 @@ export default class TableBody extends Component {
     )
   }
 }
+
+export default TableBody;
