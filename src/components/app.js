@@ -8,6 +8,7 @@ import Characters from './characters';
 import Rentals from './rentals';
 import Navigation from './navigation';
 import NotFound from './not-found';
+import Login from './login';
 
 
 const App = () => {
@@ -15,14 +16,17 @@ const App = () => {
     <Router>
       <Navigation />
 
-      <Switch>
-        <Route path='/movies/:id' component={MovieItem} />
-        <Route path='/movies' component={MoviesList} />
-        <Route path='/characters' component={Characters} />
-        <Route path='/rentals' component={Rentals} />
-        <Redirect exact from='/' to='/movies' component={Rentals} />
-        <Route component={NotFound} />
-      </Switch>
+      <div className="container">
+        <Switch>
+          <Route path='/movies/:id' component={MovieItem} />
+          <Route path='/movies' component={MoviesList} />
+          <Route path='/characters' component={Characters} />
+          <Route path='/rentals' component={Rentals} />
+          <Route path='/login' component={Login} />
+          <Redirect exact from='/' to='/movies' component={Rentals} />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
     </Router>
   )
 }
