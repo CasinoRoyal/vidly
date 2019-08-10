@@ -8,7 +8,8 @@ import Characters from './characters';
 import Rentals from './rentals';
 import Navigation from './navigation';
 import NotFound from './not-found';
-import Login from './login';
+import Login from './login-form';
+import Register from './register-form';
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
           <Route path='/characters' component={Characters} />
           <Route path='/rentals' component={Rentals} />
           <Route path='/login' component={Login} />
+          <Route path='/register' component={Register} />
           <Redirect exact from='/' to='/movies' component={Rentals} />
           <Route component={NotFound} />
         </Switch>

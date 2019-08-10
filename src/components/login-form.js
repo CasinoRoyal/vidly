@@ -15,8 +15,13 @@ export default class Login extends Form {
   }
 
   schema = {
-    username: Joi.string().required().label('Username'),
-    password: Joi.string().required().min(6).label('Password')
+    username: Joi.string()
+      .required()
+      .label('Username'),
+    password: Joi.string()
+      .required()
+      .min(6)
+      .label('Password')
   }
 
   doSubmit = () => {
@@ -31,7 +36,6 @@ export default class Login extends Form {
           {this.renderInput('username', 'Username')}
           {this.renderInput('password', 'Password', 'password')}
           {this.renderButton('Sign in')}
-          {this.renderButton('hello')}
       </form>
     )
   }
