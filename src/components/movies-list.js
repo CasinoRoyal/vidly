@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
@@ -88,13 +89,17 @@ export default class MoviesList extends Component {
         </div>
 
         <div className="col">
+          <Link to='new' className="btn btn-primary mb-3">
+            Add movie
+          </Link>
+
           <h2>Movies count: {filteredMovies.length}</h2>
           
           <MoviesTable movies={currentMovies}
                        onLike={this.onLike}
                        onDeleteMovie={this.onDeleteMovie}
                        onSort={this.onSort} 
-                       sortColumn={sortColumn}/>
+                       sortColumn={sortColumn} />
 
           <Pagination itemTotal={filteredMovies.length} 
                       pageSize={pageSize}

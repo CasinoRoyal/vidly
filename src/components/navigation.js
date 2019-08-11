@@ -7,15 +7,15 @@ const Navigation = () => {
       <Link className="navbar-brand" to="/">Vidly</Link>
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink className="nav-link" to="/movies">Movies</NavLink>
+          <NavLink className="nav-link" to="/movies/">Movies</NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink className="nav-link" to="/characters">Characters</NavLink>
+          <NavLink className="nav-link" to="/characters/">Characters</NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink className="nav-link" to="/rentals">Rentals</NavLink>
+          <NavLink className="nav-link" to="/rentals/">Rentals</NavLink>
         </li>
 
         <li className="nav-item">
