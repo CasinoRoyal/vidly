@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 
-import { getMovies } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+import { getMovies, deleteMovie } from '../services/movieService';
+import { getGenres } from '../services/genreService';
 
 import ListGroup from './list-group';
 import MoviesTable from './movies-table';
@@ -24,22 +24,34 @@ export default class MoviesList extends Component {
   }
 
   componentDidMount() {
-    const genres = [{name: 'All movies'}, ...getGenres()]
-
-    this.setState({
-      movies: getMovies(),
-      genres,
-      selectedGenre: genres[0]
+    getGenres().then(({ data }) => {
+      const genres = [{name: 'All movies'}, ...data];
+      getMovies()
+        .then(({ data }) => {
+          this.setState({
+            movies: data,
+            genres,
+            selectedGenre: genres[0]
+          })
+        })
     })
   }
 
   onDeleteMovie = (id) => {
     const { movies } = this.state;
-    const newMoviesList = movies.filter(({ _id }) => _id !== id);
+    const originalMovies = movies;
+    const newMoviesList = originalMovies.filter(({ _id }) => _id !== id);
 
     this.setState({
       movies: newMoviesList
     })
+
+    deleteMovie(id)
+      .catch((error) => {
+        console.error(error);
+
+        this.setState({movies: originalMovies})
+     })
   }
 
   onLike = (movie) => {
