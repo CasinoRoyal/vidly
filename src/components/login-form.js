@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import Joi from 'joi-browser';
+import { Redirect } from 'react-router-dom';
 
 import Form from './form';
-
+import { login, getCurrentUser } from '../services/authService';
 
 export default class Login extends Form {
 
   state = {
     data: {
-      username: '',
+      email: '',
       password: ''
     },
     errors: {}
   }
 
   schema = {
-    username: Joi.string()
+    email: Joi.string()
       .required()
-      .label('Username'),
+      .email()
+      .label('Email'),
     password: Joi.string()
       .required()
       .min(6)
@@ -25,15 +27,29 @@ export default class Login extends Form {
   }
 
   doSubmit = () => {
-    console.log('submited')
+    const { data } = this.state;
+    login(data.email, data.password)
+      .then(() => {
+        const { state } = this.props.location
+        window.location = state ? state.from.pathname : '/';
+      })
+      .catch((ex) => {
+        if (ex.response && ex.response.status === 400) {
+          const errors = {...this.state.errors};
+          errors.email = ex.response.data;
+          this.setState({errors})
+        }
+      })
   }
 
   render() {
     const { data, errors } = this.state;
 
+    if (getCurrentUser()) return <Redirect to='/' />
+
     return(
       <form onSubmit={this.handleSubmit}>
-          {this.renderInput('username', 'Username')}
+          {this.renderInput('email', 'Email', 'email')}
           {this.renderInput('password', 'Password', 'password')}
           {this.renderButton('Sign in')}
       </form>

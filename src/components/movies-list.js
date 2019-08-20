@@ -93,6 +93,8 @@ export default class MoviesList extends Component {
             currentPage, selectedGenre, 
             sortColumn, queryString } = this.state;
 
+    const { user } = this.props;
+
     let filtered = movies;
 
     if (queryString) {
@@ -120,9 +122,11 @@ export default class MoviesList extends Component {
         </div>
 
         <div className="col">
-          <Link to='new' className="btn btn-primary mb-3">
-            Add movie
-          </Link>
+          {user && (
+              <Link to='new' className="btn btn-primary mb-3">
+                Add movie
+              </Link>
+            )}
 
           <Search queryString={queryString}
                   onSearchChange={this.onSearchChange} />

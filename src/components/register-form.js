@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Joi from 'joi-browser';
 
 import Form from './form';
+import { registrate } from '../services/userService';
+import { loginWithJwt } from '../services/authService';
 
 export default class Register extends Form {
 
@@ -29,7 +31,18 @@ export default class Register extends Form {
   }
 
   doSubmit = () => {
-    console.log('register complete')
+    registrate(this.state.data)
+      .then((res) => {
+        loginWithJwt(res.headers['x-auth-token']);
+        window.location = '/';
+      })
+      .catch((ex) => {
+        if (ex.response && ex.response.status === 400) {
+          const errors = {...this.state.errors};
+          errors.username = ex.response.data;
+          this.setState({errors})
+        }
+      })
   }
 
   render() {
